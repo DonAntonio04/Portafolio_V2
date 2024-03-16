@@ -13,7 +13,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<InformacionServices>();
 
+
+builder.Services.AddCors(options=> options.AddPolicy("AngularClient",policy => {
+    policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+} ));
+
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -27,5 +38,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("AngularClient");
 
 app.Run();
